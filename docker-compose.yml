@@ -1,0 +1,11 @@
+owserver:
+    image: java:test
+    environment:
+      - CONSUL_HOST=devops.rongshutong.com:8500
+      - CONSUL_TOKEN=5e8cedf4-7761-c8f8-6cd6-62f852efc03a
+      - CONSUL_PREFIX=prd/website/owserver
+    volumes:
+      - ./data:/data
+    ports:
+      - 8544:8544
+    command: ["supervisord"]

@@ -1,0 +1,17 @@
+FROM hub.rongshutong.com/common/base:alpine
+WORKDIR /app
+RUN set -xe ;
+RUN apk --update add curl bash ldns-tools openjdk8 maven && rm -rf /var/cache/apk/*
+# Set environment
+ENV JAVA_HOME /usr/lib/jvm/default-jvm
+ENV PATH ${PATH}:${JAVA_HOME}/bin
+RUN apk add --no-cache --no-cache supervisor ;\
+     wget -q -O - http://rst-public.oss-cn-hangzhou.aliyuncs.com/docker/consul-template_0.18.0_linux_amd64.tgz | tar zxf - ;\
+     mv consul-template /usr/local/bin
+ADD . /app
+RUN /app/service start
+RUN cp ./bin/docker-entrypoint.sh /entrypoint.sh
+VOLUME ["/data"]
+EXPOSE 8544 
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["supervisord"]
